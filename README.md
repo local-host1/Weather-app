@@ -10,10 +10,10 @@ A real-time, hyper-local weather application featuring live tracking, detailed e
 
 <p align="center">
   <img src="Screenshot 2026-10-05 224705.png" width="18%" alt="App Screen 4" />
-  <img src="Screenshot 2026-10-05 224724.png" width="18%" alt="App Screen 5" />
 </p>
 
 <p align="center">
+   <img src="Screenshot 2026-10-05 224724.png" width="18%" alt="App Screen 5" />
   <img src="Screenshot 2026-10-05 224758.png" width="18%" alt="App Screen 6" />
   <img src="Screenshot 2026-10-05 224951.png" width="18%" alt="App Screen 7" />
   <img src="Screenshot 2026-10-05 225007.png" width="18%" alt="App Screen 8" />
