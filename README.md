@@ -2,6 +2,10 @@
 
 A compact Windows desktop weather app with saved locations, hourly and seven-day forecasts, location news from the last seven days, and Midnight, Ocean, and Light themes.
 
+## Android
+
+Install `Weather-Android.apk` on Android 6.0 (API 23) or newer. It includes the native mobile interface shown in `Screenshots/`, plus a resizable 2×3 home-screen widget. See [ANDROID.md](ANDROID.md) for build and widget details.
+
 ## Run
 
 Double-click `Weather.exe`. Python, an API key, and Ollama are not required. An internet connection is required for weather and news.
@@ -23,15 +27,6 @@ py -3.13 -m venv .venv-langchain313
 The executable is created at `dist\Weather.exe`. The frozen build omits LangChain and model runtimes; it calls the weather APIs directly. Source execution retains the LangChain tool interface.
 
 The initial interface implementation is preserved as `weather_assets/weather_desktop-recovery.pyc` following a disk-full write interruption. The outline, window behavior, forecasts, themes, news, storage, and packaging changes are maintained in the included editable Python modules. Full source recovery of the initial interface remains outstanding.
-
-## Typography and attribution
-
-The distributable uses Windows' installed Century Gothic Bold for its wordmark. The Zegion personal-use demo is not distributed. For a licensed personal installation, a compatible font can be placed at `weather_assets/ZegionDemo-Regular.ttf` when running from source.
-
-- Weather and forecasts: [Open-Meteo](https://open-meteo.com/).
-- Air quality: Open-Meteo/CAMS model estimates.
-- News: Google News RSS, with publisher links and a strict seven-day filter.
-- Nearby news areas: [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), via Nominatim.
 
 ## Verify the packaged executable
 

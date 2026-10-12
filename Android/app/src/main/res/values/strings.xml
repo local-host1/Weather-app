@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="widget_name">Weather</string>
+    <string name="widget_description">Live weather for your current location, refreshed periodically.</string>
+    <string name="widget_default_location">Weather</string>
+    <string name="widget_refresh">↻</string>
+    <string name="widget_symbol">☀</string>
+    <string name="widget_temperature">—°</string>
+    <string name="widget_condition">Tap refresh for weather</string>
+    <string name="widget_metrics">Humidity —% · Wind — km/h</string>
+    <string name="widget_updated">Updates about every 15 minutes</string>
+    <string name="live_location_toggle">Follow live device location</string>
+</resources>
