@@ -336,11 +336,8 @@ internal object WeatherWidgetUi {
     private fun views(context: Context, data: JSONObject?, transientStatus: String?): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.weather_widget)
         val prefs = context.getSharedPreferences(WIDGET_PREFERENCES, Context.MODE_PRIVATE)
-        if (prefs.getBoolean("transparent_widget", false)) {
-            views.setInt(R.id.widget_root, "setBackgroundColor", Color.TRANSPARENT)
-        } else {
-            views.setInt(R.id.widget_root, "setBackgroundResource", R.drawable.weather_widget_background)
-        }
+        // Keep the compact widget transparent on every launcher, including Android 11.
+        views.setInt(R.id.widget_root, "setBackgroundColor", Color.TRANSPARENT)
         val intent = Intent(context, WeatherWidgetProvider::class.java).setAction(WIDGET_REFRESH_ACTION)
         val refreshPendingIntent = PendingIntent.getBroadcast(
             context,
