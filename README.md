@@ -1,22 +1,45 @@
 # Usoft Weather
 
-A compact Windows desktop weather app with saved locations, hourly and seven-day forecasts, location news from the last seven days, and Midnight, Ocean, and Light themes.
+A real-time weather app for Windows and Android with saved locations, hourly and seven-day forecasts, local news, and Midnight, Ocean, and Light themes.
 
 ## Android
 
-Install `Weather-Android.apk` on Android 6.0 (API 23) or newer. It includes the native mobile interface shown in `Screenshots/`, plus a resizable 2×3 home-screen widget. See [ANDROID.md](ANDROID.md) for build and widget details.
+Install `Weather-Android.apk` on Android 6.0 (API 23) or newer. It uses the native Android interface shown below and includes a resizable 2×3 home-screen widget. See [ANDROID.md](ANDROID.md) for build and widget details.
 
-## Run
+## Windows
 
-Double-click `Weather.exe`. Python, an API key, and Ollama are not required. An internet connection is required for weather and news.
+Double-click `Weather.exe`. Python, an API key, and Ollama are not required. The app needs an internet connection for live weather and news. Click the Weather title for local news, the arrow beside conditions for weather details, and the menu for settings.
 
-Settings and locations are stored in `%LOCALAPPDATA%\Usoft\Weather\weather_locations.json`. Personal settings are not included in this repository.
+## App screenshots
 
-Click the Weather title for local news, the arrow beside conditions for weather details, and the menu for settings. News counts appear when hovering over the title.
+### Desktop and home screen widgets
 
-## Build from this repository
+<p align="center">
+  <img src="Screenshot 2026-10-05 224605.png" width="30%" alt="Widget Dark Mode" />
+  <img src="Screenshot 2026-10-05 224620.png" width="30%" alt="Widget Blue Accent" />
+  <img src="Screenshot 2026-10-05 224631.png" width="30%" alt="Widget Light Mode" />
+</p>
 
-Use Windows x64 and Python **3.13**. The bundled interface snapshot requires this Python version.
+### Main detail views
+
+<p align="center">
+  <img src="Screenshot 2026-10-05 224724.png" width="18%" alt="Weather News Feed" />
+  <img src="Screenshot 2026-10-05 224705.png" width="13.7%" alt="Weather Metrics" />
+  <img src="Screenshot 2026-10-05 224758.png" width="18%" alt="General Preferences" />
+  <img src="Screenshot 2026-10-05 225007.png" width="18%" alt="Locations" />
+</p>
+
+### Location views
+
+<p align="center">
+  <img src="Screenshot 2026-10-05 224951.png" width="18%" alt="Colombo forecast" />
+  <img src="Screenshot 2026-10-05 225035.png" width="18%" alt="Saved cities" />
+  <img src="Screenshot 2026-10-05 225059.png" width="18%" alt="Location directory" />
+</p>
+
+## Build Windows executable
+
+Use Windows x64 and Python 3.13.
 
 ```powershell
 py -3.13 -m venv .venv-langchain313
@@ -24,15 +47,4 @@ py -3.13 -m venv .venv-langchain313
 .\Build-Weather.ps1
 ```
 
-The executable is created at `dist\Weather.exe`. The frozen build omits LangChain and model runtimes; it calls the weather APIs directly. Source execution retains the LangChain tool interface.
-
-The initial interface implementation is preserved as `weather_assets/weather_desktop-recovery.pyc` following a disk-full write interruption. The outline, window behavior, forecasts, themes, news, storage, and packaging changes are maintained in the included editable Python modules. Full source recovery of the initial interface remains outstanding.
-
-## Verify the packaged executable
-
-```powershell
-.\Weather.exe --self-test "$PWD\smoke-report.json"
-.\Weather.exe --self-test-live "$PWD\live-report.json"
-```
-
-The second command checks live forecasts and news. Reports and test settings stay local. `SHA256SUMS.txt` records the executable's build checksum.
+`SHA256SUMS.txt` records the packaged executable and APK checksums.
