@@ -163,29 +163,6 @@ class MainActivity : Activity() {
         } else 0
         content.setBackgroundColor(colors.background)
         content.removeAllViews()
-        if (page == "weather") {
-            addReferenceHeader("Weather", true)
-            renderReferenceDashboard()
-            addReferenceFooter()
-            return
-        }
-        val referenceTitle = when (page) {
-            "details" -> weather?.place ?: "Weather"
-            "locations" -> "Locations"
-            "news" -> "News Feed"
-            "settings" -> "General"
-            else -> "About Weather"
-        }
-        addReferenceHeader(referenceTitle, false)
-        when (page) {
-            "details" -> renderDetails()
-            "locations" -> renderLocations()
-            "news" -> renderNews()
-            "settings" -> renderSettings()
-            else -> renderAbout()
-        }
-        addReferenceFooter()
-        return
         val toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -271,82 +248,6 @@ class MainActivity : Activity() {
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         ))
-    }
-
-    private fun addReferenceHeader(title: String, showMenu: Boolean) {
-        val header = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(14), dp(10), dp(10), dp(10))
-            background = rounded(palette.surface, 15, palette.border)
-        }
-        header.addView(compactIcon(if (showMenu) "☰" else "‹") {
-            if (showMenu) openNavigationDrawer() else { page = "weather"; renderPage() }
-        })
-        header.addView(text(title, 22f, true).apply {
-            setPadding(dp(8), 0, 0, 0)
-            if (showMenu) setOnClickListener { page = "news"; renderPage(); loadNews(false) }
-        }, LinearLayout.LayoutParams(0, dp(42), 1f))
-        header.addView(compactIcon("×") { page = "weather"; renderPage() })
-        content.addView(header, fullButtonParams())
-    }
-
-    private fun addReferenceFooter() {
-        content.addView(text("◯  ${weather?.time?.takeAfterT() ?: "--:--"}  · Open-Meteo                         Usoft®", 10f, false, palette.accent).apply {
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(8), dp(5), dp(8), dp(5))
-            background = rounded(palette.background, 14, palette.border)
-        }, fullButtonParams(top = 8))
-    }
-
-    private fun compactIcon(label: String, action: () -> Unit): TextView = text(label, 20f, false, palette.muted).apply {
-        gravity = Gravity.CENTER
-        setPadding(dp(5), 0, dp(5), 0)
-        setOnClickListener { action() }
-    }
-
-    private fun renderReferenceDashboard() {
-        val data = weather
-        if (data == null) {
-            content.addView(text("Loading weather…", 14f, false, palette.muted).apply { setPadding(dp(12), dp(20), 0, dp(20)) })
-            return
-        }
-        val condition = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(12), dp(11), dp(10), dp(8)) }
-        condition.addView(text("CURRENT", 10f, true, palette.accent))
-        condition.addView(text(data.condition, 12f, false, palette.muted).apply { setPadding(dp(28), 0, 0, 0) })
-        condition.addView(text("›", 21f, false, palette.muted).apply { setPadding(dp(9), 0, 0, 0) })
-        content.addView(condition)
-
-        val hero = LinearLayout(this).apply { gravity = Gravity.TOP; setPadding(dp(12), 0, dp(12), dp(3)) }
-        val location = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        location.addView(text(data.place, 20f, true))
-        location.addView(text(data.timezone.ifBlank { "Saved location" }, 11f, false, palette.muted).apply { setPadding(0, dp(2), 0, 0) })
-        location.addView(text("${data.latitude.formatCoord()}, ${data.longitude.formatCoord()}", 11f, false, palette.muted).apply { setPadding(0, dp(7), 0, 0) })
-        hero.addView(location, LinearLayout.LayoutParams(0, -2, 1f))
-        val temperature = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL }
-        temperature.addView(text("${data.temperature.asTemperature()}$temperatureUnit", 18f, true, palette.background).apply {
-            gravity = Gravity.CENTER
-            background = rounded(0xFFF5F7FA.toInt(), 38)
-        }, LinearLayout.LayoutParams(dp(72), dp(72)))
-        temperature.addView(text("Feels ${data.feelsLike.asTemperature()}$temperatureUnit", 9f, false, palette.muted).apply { gravity = Gravity.CENTER; setPadding(0, dp(6), 0, 0) })
-        hero.addView(temperature, LinearLayout.LayoutParams(dp(82), -2))
-        content.addView(hero)
-
-        val metrics = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(13), dp(7), dp(13), dp(8)) }
-        metrics.addView(text("♧  Humidity  ${data.humidity.asWhole()}%", 12f, true), LinearLayout.LayoutParams(0, -2, 1f))
-        metrics.addView(text("≋  Wind  ${data.wind.asWhole()} km/h", 12f, true), LinearLayout.LayoutParams(0, -2, 1f))
-        content.addView(metrics)
-
-        val actions = LinearLayout(this).apply {
-            gravity = Gravity.CENTER_VERTICAL
-            background = rounded(palette.background, 0, palette.border)
-            setPadding(dp(12), dp(7), dp(10), dp(7))
-        }
-        actions.addView(text("LOCATIONS\n${savedLocations().size} saved", 10f, true, palette.muted).apply { setOnClickListener { page = "locations"; renderPage() } }, LinearLayout.LayoutParams(0, -2, 1f))
-        listOf("⌖" to "locations", "+" to "locations", "⚙" to "settings", "ⓘ" to "about", "⌄" to "details").forEach { pair ->
-            actions.addView(compactIcon(pair.first) { page = pair.second; if (pair.second == "details") detailsTab = "Overview"; renderPage() }, LinearLayout.LayoutParams(dp(37), dp(38)))
-        }
-        content.addView(actions)
     }
 
     private fun renderDashboard() {
