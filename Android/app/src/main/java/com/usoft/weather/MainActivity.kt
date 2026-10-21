@@ -171,6 +171,12 @@ class MainActivity : Activity() {
             LinearLayout.LayoutParams(dp(48), dp(44)))
         toolbar.addView(text("Weather", 21f, true).apply {
             setPadding(dp(10), 0, 0, 0)
+            isClickable = true
+            setOnClickListener {
+                page = "news"
+                renderPage()
+                loadNews(force = false)
+            }
         }, LinearLayout.LayoutParams(0, -2, 1f))
         content.addView(toolbar)
         content.addView(text(
