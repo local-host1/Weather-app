@@ -1,15 +1,18 @@
-name: weather_app
-description: My iOS Weather App
-version: 1.0.0+1
+# name: weather_app
+# description: My iOS Weather App
+# version: 1.0.0+1
 
-environment:
-  sdk: '>=3.0.0 <4.0.0'
+# environment:
+#   sdk: '>=3.0.0 <4.0.0'
 
-dependencies:
-  flutter:
-    sdk: flutter
-  http: ^1.1.0 # Used to connect to your weather API
+# dependencies:
+#   flutter:
+#     sdk: flutter
+#   http: ^1.1.0 # Used to connect to your weather API
 
-flutter:
-  uses-material-design: true
+# flutter:
+#   uses-material-design: true
 
+kivy==2.3.0
+kivymd==1.2.0
+requests
