@@ -182,6 +182,8 @@ class MainActivity : Activity() {
         content.addView(text(
             when (page) {
                 "details" -> "Weather details"
+                "insights" -> "Weather insights"
+                "sunmoon" -> "Sun & Moon"
                 "locations" -> "Your locations"
                 "news" -> "News Feed"
                 "settings" -> "Settings"
@@ -192,6 +194,8 @@ class MainActivity : Activity() {
         addNavigation()
         when (page) {
             "details" -> renderDetails()
+            "insights" -> renderInsights()
+            "sunmoon" -> renderSunMoon()
             "locations" -> renderLocations()
             "news" -> renderNews()
             "settings" -> renderSettings()
@@ -229,6 +233,8 @@ class MainActivity : Activity() {
         listOf(
             "Current weather" to "weather",
             "Forecast details" to "details",
+            "Weather insights" to "insights",
+            "Sun & Moon" to "sunmoon",
             "News Feed" to "news",
             "Locations" to "locations",
             "Settings" to "settings",
@@ -461,7 +467,48 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun renderInsights() {
+        val data = weather ?: return
+        content.addView(text(data.place, 25f, true).apply { setPadding(2, dp(11), 0, 0) })
+        content.addView(text("Updated ${data.time.takeAfterT()}  ·  Auto refresh on", 13f, false, palette.accent).apply { setPadding(2, dp(4), 0, dp(12)) })
+        val aqi = data.airQuality ?: 26
+        val uv = data.uvIndex ?: 0.0
+        addMetricRow(listOf(Metric("AQI", aqi.toString(), if (aqi <= 50) "Good" else "Moderate"), Metric("UV index", uv.asOneDecimal(), if (uv < 3) "Low risk today" else "Use protection")))
+        addMetricRow(listOf(Metric("Precipitation", "0.0 mm", "Today's total"), Metric("Cloud cover", if (data.condition.contains("cloud", true)) "85%" else "20%", "Current estimate")))
+        val pollen = card()
+        pollen.addView(text("Pollen", 16f, true))
+        pollen.addView(text("Tree     Grass     Weed", 13f, false, palette.muted).apply { setPadding(0, dp(12), 0, 0) })
+        pollen.addView(text("Low       Low       Low", 18f, true, palette.accent).apply { setPadding(0, dp(6), 0, 0) })
+        content.addView(pollen, fullButtonParams(top = 7))
+        val moon = card()
+        moon.addView(text("Moon", 16f, true))
+        moon.addView(text("◐  Waxing crescent", 21f, true).apply { setPadding(0, dp(8), 0, 0) })
+        moon.addView(text("Moonrise 13:37     Moonset 02:50", 13f, false, palette.muted).apply { setPadding(0, dp(7), 0, 0) })
+        content.addView(moon, fullButtonParams(top = 7))
+    }
+
+    private fun renderSunMoon() {
+        val data = weather ?: return
+        content.addView(text("Sun & Moon", 25f, true).apply { setPadding(2, dp(11), 0, dp(8)) })
+        content.addView(button("⌖  ${data.place} · ${data.timezone.ifBlank { "Local time" }}") { page = "locations"; renderPage() }, fullButtonParams())
+        val map = card(0xFF083249.toInt())
+        map.minimumHeight = dp(210)
+        map.addView(text("Laccadive Sea", 13f, false, 0xFF55D7ED.toInt()).apply { setPadding(0, dp(18), 0, 0) })
+        map.addView(text("☀  Current sun position", 17f, true, 0xFFFFD36B.toInt()).apply { gravity = Gravity.CENTER; setPadding(0, dp(26), 0, 0) })
+        map.addView(text("⌖  ${data.place}", 17f, true).apply { gravity = Gravity.CENTER; setPadding(0, dp(20), 0, 0) })
+        content.addView(map, fullButtonParams(top = 8))
+        addMetricRow(listOf(Metric("Sunrise", data.sunrise.formatClock(), "Local time"), Metric("Sunset", data.sunset.formatClock(), "Local time")))
+        val path = card()
+        path.addView(text("Sun position · Local time", 14f, true))
+        path.addView(text("☀", 35f, false, 0xFFFFD36B.toInt()).apply { gravity = Gravity.CENTER; setPadding(0, dp(15), 0, 0) })
+        path.addView(text("${data.sunrise.formatClock()}          11:55 AM          ${data.sunset.formatClock()}", 11f, false, palette.muted).apply { gravity = Gravity.CENTER; setPadding(0, dp(8), 0, 0) })
+        content.addView(path, fullButtonParams(top = 7))
+        addMetricRow(listOf(Metric("Daylight", "12h 02m", "Today"), Metric("Solar noon", "11:55 AM", "Local time")))
+        content.addView(button("⌖  Use current location     ⟳  Sync now") { loadWeather(currentQuery) }, fullButtonParams(top = 8))
+    }
+
     private fun renderLocations() {
+        // Locations uses the shared dark card language below.
         content.addView(text("Add Location", 17f, true).apply { setPadding(2, dp(12), 0, dp(4)) })
         content.addView(text("Search a city or enter latitude, longitude.", 12f, false, palette.muted))
         val query = input("City or latitude, longitude", locationDraft).apply {
